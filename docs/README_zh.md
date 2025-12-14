@@ -20,7 +20,8 @@
 
 </div>
 
-> [!NOTE] > **⚠️ 游戏版本提示** > **乐器家具**演奏功能目前**仅在《OverField》 (开放空间) 国服**开放。
+> [!NOTE] 
+> **⚠️ 游戏版本提示** > **乐器家具**演奏功能目前**仅在《OverField》 (开放空间) 国服**开放。
 > 下载地址: [哔哩哔哩游戏中心](https://www.biligame.com/detail/?id=114015&spm_id_from=555.224.0.0&sourceFrom=1600820011)
 
 ---
@@ -42,7 +43,8 @@
 
 **OverField Music Player** 是一款专为游戏 _OverField_ 设计的高精度自动化脚本，完美支持 **钢琴** 和 **电吉他**（它们拥有相同的按键布局）。基于 **AutoHotkey v2** 开发，它在 MIDI 编曲和游戏内演奏之间架起了一座桥梁，提供毫秒级精度的计时和丰富的实时控制功能。
 
-> [!TIP] > **觉得好用吗？** 请在 GitHub 上为本项目点一颗 ⭐ **Star** 以支持开发！
+> [!TIP] 
+> **觉得好用吗？** 请在 GitHub 上为本项目点一颗 ⭐ **Star** 以支持开发！
 
 ## ✨ 主要功能
 
@@ -125,14 +127,16 @@
 
 由于本工具使用特定的 JSON 格式，您可以使用 **Tone.js MIDI** 工具来转换您的 `.mid` 文件：
 
-1.  访问 [https://tonejs.github.io/Midi/](https://tonejs.github.io/Midi/)。
+1.  访问 [https://tonejs.github.io/Midi/](https://tonejs.github.io/Midi/).
 2.  将您的 MIDI 文件拖放到该页面。
 3.  复制生成的 JSON 输出。
 4.  将其粘贴到 `Songs` 文件夹中的新文件（例如 `mysong.json`）。
 
-> [!TIP] > **寻找 MIDI 文件？** 您可以在 [OnlineSequencer.net](https://onlinesequencer.net/sequences) 找到高质量的 MIDI 序列。
+> [!TIP] 
+> **寻找 MIDI 文件？** 您可以在 [OnlineSequencer.net](https://onlinesequencer.net/sequences) 找到高质量的 MIDI 序列。
 
-> [!IMPORTANT] > **🎹 MIDI 选择指南**
+> [!IMPORTANT] 
+> **🎹 MIDI 选择指南**
 > 游戏内的乐器仅限于 **21 个全音阶按键**（3 个八度的白键）和 **7 个和弦按键**。
 >
 > - **旋律范围**: C3 - B5（仅限白键）。
