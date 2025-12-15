@@ -20,7 +20,7 @@
 
 </div>
 
-> [!NOTE] 
+> [!NOTE]
 > **⚠️ Game Version Notice**
 > The **musical furniture** is currently **only available in the Chinese server** of "OverField" (开放空间).
 > You can download it here: [Bilibili Game Download](https://www.biligame.com/detail/?id=114015&spm_id_from=555.224.0.0&sourceFrom=1600820011)
@@ -43,7 +43,7 @@
 
 **OverField Music Player** is a high-precision automation script designed to play complex musical arrangements in the game _OverField_. It fully supports **Piano** and **Electric Guitar** (which share the same key layout). Built with **AutoHotkey v2**, it bridges the gap between MIDI compositions and in-game performance, offering millisecond-accurate timing and a suite of real-time controls.
 
-> [!TIP] 
+> [!TIP]
 > **Enjoying the tool?** Please consider giving this project a ⭐ **Star** on GitHub to support development!
 
 ## ✨ Key Features
@@ -132,10 +132,10 @@ Since this tool uses a specific JSON format, you can use the **Tone.js MIDI** to
 3.  Copy the generated JSON output.
 4.  Paste it into a new file in the `Songs` folder (e.g., `mysong.json`).
 
-> [!TIP] 
+> [!TIP]
 > **Need MIDI files?** You can find high-quality MIDI sequences at [OnlineSequencer.net](https://onlinesequencer.net/sequences).
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > **🎹 MIDI Selection Guide**
 > The in-game instrument is limited to **21 diatonic keys** (3 octaves of white keys only) and **7 chord keys**.
 >
@@ -150,6 +150,7 @@ Since this tool uses a specific JSON format, you can use the **Tone.js MIDI** to
 - [ ] **Theme Support**: Dark mode and custom color schemes for the definition.
 - [ ] **Visual Overlay**: A visual piano overlay to see which keys are being pressed.
 - [ ] **Data Recorder**: Record in-game performance and save to JSON.
+- [x] **Mini Mode**: Compact UI for better visibility.
 
 ## 🤝 Contributing
 

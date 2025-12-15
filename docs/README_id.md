@@ -20,7 +20,7 @@
 
 </div>
 
-> [!NOTE] 
+> [!NOTE]
 > **⚠️ Pemberitahuan Versi Game**
 > Fitur **furnitur instrumen** saat ini **hanya tersedia di server China** dari "OverField" (开放空间).
 > Anda dapat mengunduhnya di sini: [Unduh Game Bilibili](https://www.biligame.com/detail/?id=114015&spm_id_from=555.224.0.0&sourceFrom=1600820011)
@@ -132,10 +132,10 @@ Karena alat ini menggunakan format JSON tertentu, Anda dapat menggunakan alat **
 3.  Salin output JSON yang dihasilkan.
 4.  Tempelkan ke dalam file baru di folder `Songs` (misalnya, `lagusaya.json`).
 
-> [!TIP] 
+> [!TIP]
 > **Butuh file MIDI?** Anda dapat menemukan urutan MIDI berkualitas tinggi di [OnlineSequencer.net](https://onlinesequencer.net/sequences).
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > **🎹 Panduan Pemilihan MIDI**
 > Instrumen dalam game terbatas pada **21 tombol diatonis** (3 oktaf tuts putih) dan **7 tombol chord**.
 >
@@ -150,6 +150,7 @@ Karena alat ini menggunakan format JSON tertentu, Anda dapat menggunakan alat **
 - [ ] **Dukungan Tema**: Mode gelap dan skema warna kustom.
 - [ ] **Overlay Visual**: Overlay piano visual untuk melihat tombol mana yang ditekan.
 - [ ] **Perekam Makro**: Merekam kinerja dalam game dan menyimpannya ke JSON.
+- [x] **Mini Mode**: UI ringkas untuk visibilitas yang lebih baik.
 
 ## 🤝 Kontribusi
 

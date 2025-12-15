@@ -33,7 +33,15 @@ global ProgressSlider, TimeDisplay, SpeedCtrl
 global DdlWindows, BtnRefreshWin, SongList
 global GlobalTranspose := 0
 global GlobalSpeed := 1.0 
+global IsMiniMode := false
+global GroupHide := []
+global BtnMiniMode
 
+AddHide(ctrl) {
+    global GroupHide
+    GroupHide.Push(ctrl)
+    return ctrl
+}
 ; ==============================================================================
 ; GUI INITIALIZATION
 ; ==============================================================================
@@ -42,79 +50,83 @@ MyGui.SetFont("s10", "Consolas")
 MyGui.OnEvent("Close", (*) => SaveAndExit())
 MyGui.BackColor := "F0F0F0"
 
+BtnMiniMode := MyGui.Add("Button", "x450 y5 w80 h20", "Mini Mode")
+BtnMiniMode.SetFont("s8")
+BtnMiniMode.OnEvent("Click", (*) => ToggleMiniMode())
+
 ; --- SECTION 1: LIBRARY & SOURCE ---
 MyGui.SetFont("s10 bold")
-MyGui.Add("GroupBox", "x10 y10 w520 h180", " [1] LIBRARY & SOURCE ")
+AddHide(MyGui.Add("GroupBox", "x10 y10 w520 h180", " [1] LIBRARY & SOURCE "))
 MyGui.SetFont("s10 norm")
 
-MyGui.Add("Text", "xp+15 yp+25", "Playlist (Folder 'Songs'):")
-SongList := MyGui.Add("ListBox", "y+5 w190 h100 vSelectedSong")
+AddHide(MyGui.Add("Text", "xp+15 yp+25", "Playlist (Folder 'Songs'):"))
+SongList := AddHide(MyGui.Add("ListBox", "y+5 w190 h100 vSelectedSong"))
 SongList.OnEvent("DoubleClick", (*) => LoadSongFromPlaylist())
 
 ; Playlist Navigation Buttons
-BtnMoveUp := MyGui.Add("Button", "x+2 yp w28 h49", "▲")
+BtnMoveUp := AddHide(MyGui.Add("Button", "x+2 yp w28 h49", "▲"))
 BtnMoveUp.OnEvent("Click", (*) => MoveSongUp())
-BtnMoveDown := MyGui.Add("Button", "xp y+2 w28 h49", "▼")
+BtnMoveDown := AddHide(MyGui.Add("Button", "xp y+2 w28 h49", "▼"))
 BtnMoveDown.OnEvent("Click", (*) => MoveSongDown())
 
-BtnRefreshLib := MyGui.Add("Button", "x25 y+5 w105 h28", "⟳ Refresh")
+BtnRefreshLib := AddHide(MyGui.Add("Button", "x25 y+5 w105 h28", "⟳ Refresh"))
 BtnRefreshLib.OnEvent("Click", (*) => RefreshPlaylist())
 
-BtnOpenFolder := MyGui.Add("Button", "x+10 yp w105 h28", "📂 Open Dir")
+BtnOpenFolder := AddHide(MyGui.Add("Button", "x+10 yp w105 h28", "📂 Open Dir"))
 BtnOpenFolder.OnEvent("Click", (*) => Run("Songs"))
 
-MyGui.Add("Text", "x260 y35", "Manual Input / Preview:")
+AddHide(MyGui.Add("Text", "x260 y35", "Manual Input / Preview:"))
 
-BtnPaste := MyGui.Add("Button", "y+5 w85 h28", "📋 Paste")
+BtnPaste := AddHide(MyGui.Add("Button", "y+5 w85 h28", "📋 Paste"))
 BtnPaste.OnEvent("Click", (*) => PasteFromClipboard())
 
-BtnClear := MyGui.Add("Button", "x+5 yp w85 h28", "🗑️ Clear")
+BtnClear := AddHide(MyGui.Add("Button", "x+5 yp w85 h28", "🗑️ Clear"))
 BtnClear.OnEvent("Click", (*) => ClearData())
 
-BtnExpand := MyGui.Add("Button", "x260 y+5 w85 h28", "✏️ Edit")
+BtnExpand := AddHide(MyGui.Add("Button", "x260 y+5 w85 h28", "✏️ Edit"))
 BtnExpand.OnEvent("Click", (*) => OpenJsonEditor())
 
-BtnSaveSong := MyGui.Add("Button", "x+5 yp w85 h28", "💾 Save")
+BtnSaveSong := AddHide(MyGui.Add("Button", "x+5 yp w85 h28", "💾 Save"))
 BtnSaveSong.OnEvent("Click", (*) => SaveSongToLibrary())
 
-EditCtrl := MyGui.Add("Edit", "x260 y+5 w260 h25 vJsonData -Wrap ReadOnly", "")
-InfoText := MyGui.Add("Text", "x260 y+2 w260 r1 cBlue Right", "Waiting for data...")
+EditCtrl := AddHide(MyGui.Add("Edit", "x260 y+5 w260 h25 vJsonData -Wrap ReadOnly", ""))
+InfoText := AddHide(MyGui.Add("Text", "x260 y+2 w260 r1 cBlue Right", "Waiting for data..."))
 
 ; --- SECTION 2: SETTINGS ---
 MyGui.SetFont("s10 bold")
-MyGui.Add("GroupBox", "x10 y200 w520 h140", " [2] SETTINGS ")
+AddHide(MyGui.Add("GroupBox", "x10 y200 w520 h140", " [2] SETTINGS "))
 MyGui.SetFont("s10 norm")
 
-CbSustain := MyGui.Add("Checkbox", "x30 yp+30 Checked", "Sustain")
-MyGui.Add("Text", "x260 yp w100 Right", "Transpose:") 
-TransposeCtrl := MyGui.Add("Edit", "x+10 yp-3 w60 Center", "0")
-MyGui.Add("UpDown", "Range-24-24", 0)
+CbSustain := AddHide(MyGui.Add("Checkbox", "x30 yp+30 Checked", "Sustain"))
+AddHide(MyGui.Add("Text", "x260 yp w100 Right", "Transpose:")) 
+TransposeCtrl := AddHide(MyGui.Add("Edit", "x+10 yp-3 w60 Center", "0"))
+AddHide(MyGui.Add("UpDown", "Range-24-24", 0))
 
-CbIgnoreChords := MyGui.Add("Checkbox", "x30 y+15 Checked", "No Chords")
-MyGui.Add("Text", "x260 yp w100 Right", "Max Notes:") 
-MaxTapesCtrl := MyGui.Add("Edit", "x+10 yp-3 w60 Number Center", "15")
-MyGui.Add("UpDown", "Range1-50", 15)
+CbIgnoreChords := AddHide(MyGui.Add("Checkbox", "x30 y+15 Checked", "No Chords"))
+AddHide(MyGui.Add("Text", "x260 yp w100 Right", "Max Notes:")) 
+MaxTapesCtrl := AddHide(MyGui.Add("Edit", "x+10 yp-3 w60 Number Center", "15"))
+AddHide(MyGui.Add("UpDown", "Range1-50", 15))
 
-CbMono := MyGui.Add("Checkbox", "x30 y+15", "Mono Mode")
+CbMono := AddHide(MyGui.Add("Checkbox", "x30 y+15", "Mono Mode"))
 CbMono.SetFont("bold cBlue")
-MyGui.Add("Text", "x260 yp w100 Right", "Speed:")
-SpeedCtrl := MyGui.Add("Edit", "x+10 yp-2 w60 Number Center", "100")
+AddHide(MyGui.Add("Text", "x260 yp w100 Right", "Speed:"))
+SpeedCtrl := AddHide(MyGui.Add("Edit", "x+10 yp-2 w60 Number Center", "100"))
 SpeedCtrl.OnEvent("Change", (*) => OnSpeedChange())
-MyGui.Add("UpDown", "Range10-500", 100)
-MyGui.Add("Text", "x+5 yp w20", "%")
+AddHide(MyGui.Add("UpDown", "Range10-500", 100))
+AddHide(MyGui.Add("Text", "x+5 yp w20", "%"))
 
 ; --- SECTION 3: CONTROLS ---
 MyGui.SetFont("s10 bold")
-MyGui.Add("GroupBox", "x10 y350 w520 h170", " [3] CONTROLS ")
+AddHide(MyGui.Add("GroupBox", "x10 y350 w520 h170", " [3] CONTROLS "))
 MyGui.SetFont("s10 norm")
 
-MyGui.Add("Text", "xp+20 yp+25", "Target:")
+AddHide(MyGui.Add("Text", "xp+20 yp+25", "Target:"))
 
-DdlWindows := MyGui.Add("DropDownList", "x+10 yp-2 w320 vTargetWindow", ["(Unlocked - Any Window)"])
+DdlWindows := AddHide(MyGui.Add("DropDownList", "x+10 yp-2 w320 vTargetWindow", ["(Unlocked - Any Window)"]))
 DdlWindows.Choose(1)
 DdlWindows.GetPos(,,,&ddlH) ; Get actual height to align the button next to it
 
-BtnRefreshWin := MyGui.Add("Button", "x+5 yp w40 h" . ddlH, "🗘")
+BtnRefreshWin := AddHide(MyGui.Add("Button", "x+5 yp w40 h" . ddlH, "🗘"))
 BtnRefreshWin.OnEvent("Click", (*) => RefreshWindowList())
 
 MyGui.SetFont("s14 bold")
@@ -132,7 +144,18 @@ BtnStop := MyGui.Add("Button", "x+10 w150 h45", "■ STOP (F8)")
 BtnStop.SetFont("bold s11")
 BtnStop.OnEvent("Click", (*) => StopMusic())
 
-SB := MyGui.Add("StatusBar",, " Ready.")
+SB := AddHide(MyGui.Add("StatusBar",, " Ready."))
+
+; Save positions for restore
+global MiniModeSavedPos := Map()
+TimeDisplay.GetPos(&ox, &oy, &ow, &oh)
+MiniModeSavedPos["Time"] := {x:ox, y:oy, w:ow, h:oh}
+ProgressSlider.GetPos(&ox, &oy, &ow, &oh)
+MiniModeSavedPos["Slider"] := {x:ox, y:oy, w:ow, h:oh}
+BtnStart.GetPos(&ox, &oy, &ow, &oh)
+MiniModeSavedPos["Start"] := {x:ox, y:oy, w:ow, h:oh}
+BtnStop.GetPos(&ox, &oy, &ow, &oh)
+MiniModeSavedPos["Stop"] := {x:ox, y:oy, w:ow, h:oh}
 SB.SetParts(350, 170)
 
 ; Load Initial Data
@@ -468,8 +491,22 @@ StartMusic() {
     }
 
     Analysis := AnalyzeInternal(RawNotes)
+    
+    ; Warning Thresholds: <80% fit OR >2000 notes
     if (Analysis.FitPercent < 80 || Analysis.TotalNotes > 2000) {
-        Result := MsgBox("Complex song detected (" . Analysis.TotalNotes . " notes).`nEnable 'Smart Optimization'?", "Optimize?", "YesNo 4096 Icon!")
+        durSec := Analysis.DurationMs / 1000
+        nps := durSec > 0 ? Round(Analysis.TotalNotes / durSec, 2) : 0
+        durStr := FormatTimeMs(Analysis.DurationMs)
+        
+        Msg := "⚠️ COMPLEX SONG DETECTED!`n`n"
+             . "🎵 Total Notes: " . Analysis.TotalNotes . "`n"
+             . "⏱ Duration: " . durStr . "`n"
+             . "⚡ Speed (NPS): " . nps . " notes/sec`n"
+             . "🎹 Key Fit: " . Analysis.FitPercent . "%`n`n"
+             . "This song might lag or skip notes.`n"
+             . "Enable 'Smart Optimization' to fix this?"
+             
+        Result := MsgBox(Msg, "Performance Warning", "YesNo 4096 Icon!")
         if (Result == "Yes") {
             IsOptimizedMode := true
             UpdateStatus("🚀 Optimization Enabled!", 1)
@@ -863,10 +900,18 @@ AnalyzeInternal(noteString) {
     totalNotes := 0
     inRangeCount := 0
     midiArray := []
+    maxTime := 0
+    
     Loop Parse, noteString, "`n", "`r" {
         if (A_LoopField = "")
             continue
         parts := StrSplit(A_LoopField, "|")
+        
+        t := Number(parts[1])
+        d := Number(parts[2])
+        if (t + d > maxTime)
+            maxTime := t + d
+            
         midi := Number(parts[3])
         midiArray.Push(midi)
         rem := Mod(midi, 12)
@@ -877,7 +922,7 @@ AnalyzeInternal(noteString) {
     }
     
     if (totalNotes == 0)
-        return {TotalNotes: 0, FitPercent: 0, BestShift: 0}
+        return {TotalNotes: 0, FitPercent: 0, BestShift: 0, DurationMs: 0}
 
     bestShift := 0
     maxFit := -1
@@ -898,7 +943,7 @@ AnalyzeInternal(noteString) {
     }
     
     percent := Round((maxFit / totalNotes) * 100, 1)
-    return {TotalNotes: totalNotes, FitPercent: percent, BestShift: bestShift}
+    return {TotalNotes: totalNotes, FitPercent: percent, BestShift: bestShift, DurationMs: maxTime}
 }
 
 AnalyzeAndSuggest(noteString) {
@@ -929,3 +974,46 @@ F4:: {
 #MaxThreadsPerHotkey 1
 
 F8::StopMusic()
+
+ToggleMiniMode() {
+    global IsMiniMode, GroupHide, MyGui, BtnMiniMode, MiniModeSavedPos
+    global TimeDisplay, ProgressSlider, BtnStart, BtnStop, SB
+
+    IsMiniMode := !IsMiniMode
+    
+    ; Toggle visibility
+    for ctrl in GroupHide {
+        try ctrl.Visible := !IsMiniMode
+    }
+    
+    if (IsMiniMode) {
+        MyGui.Opt("-Resize")
+        
+        ; Define Mini Layout
+        TimeDisplay.Move(10, 25, 330, 25)
+        ProgressSlider.Move(10, 50, 330, 30) ; Slider needs height
+        
+        wBtn := 160
+        BtnStart.Move(10, 85, wBtn, 40)
+        BtnStop.Move(10 + wBtn + 10, 85, wBtn, 40)
+        
+        BtnMiniMode.Text := "Expand"
+        BtnMiniMode.Move(280, 2, 60, 20) ; Top right of mini win
+        
+        MyGui.Show("w350 h140")
+        
+    } else {
+        MyGui.Opt("-Resize") 
+        
+        ; Restore
+        p := MiniModeSavedPos["Time"], TimeDisplay.Move(p.x, p.y, p.w, p.h)
+        p := MiniModeSavedPos["Slider"], ProgressSlider.Move(p.x, p.y, p.w, p.h)
+        p := MiniModeSavedPos["Start"], BtnStart.Move(p.x, p.y, p.w, p.h)
+        p := MiniModeSavedPos["Stop"], BtnStop.Move(p.x, p.y, p.w, p.h)
+        
+        BtnMiniMode.Text := "Mini Mode"
+        BtnMiniMode.Move(450, 5, 80, 20)
+        
+        MyGui.Show("w540 h560")
+    }
+}
