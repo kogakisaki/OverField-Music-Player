@@ -20,7 +20,8 @@
 
 </div>
 
-> [!NOTE] > **⚠️ Pemberitahuan Versi Game**
+> [!NOTE] 
+> **⚠️ Pemberitahuan Versi Game**
 > Fitur **furnitur instrumen** saat ini **hanya tersedia di server China** dari "OverField" (开放空间).
 > Anda dapat mengunduhnya di sini: [Unduh Game Bilibili](https://www.biligame.com/detail/?id=114015&spm_id_from=555.224.0.0&sourceFrom=1600820011)
 
@@ -43,7 +44,8 @@
 
 **OverField Music Player** adalah skrip otomatisasi presisi tinggi yang dirancang untuk memainkan aransemen musik yang kompleks dalam game _OverField_. Alat ini sepenuhnya mendukung **Piano** dan **Gitar Listrik** (karena memiliki tata letak tombol yang sama). Dibuat dengan **AutoHotkey v2**, alat ini menjembatani komposisi MIDI dengan kinerja dalam game, menawarkan waktu akurat hingga milidetik dan kontrol real-time.
 
-> [!TIP] > **Suka dengan alat ini?** Mohon pertimbangkan untuk memberikan ⭐ **Bintang** di GitHub untuk mendukung pengembangan!
+> [!TIP] 
+> **Suka dengan alat ini?** Mohon pertimbangkan untuk memberikan ⭐ **Bintang** di GitHub untuk mendukung pengembangan!
 
 ## ✨ Fitur Utama
 
@@ -76,19 +78,19 @@
 
 ### Pintasan Keyboard
 
-|      Tombol      | Aksi                           |
-| :--------------: | :----------------------------- |
-|      **F4**      | Beralih **Main / Jeda**        |
-| **Ctrl + Kiri**  | **Lagu Sebelumnya** (Previous) |
-| **Ctrl + Kanan** | **Lagu Berikutnya** (Next)     |
-|      **F8**      | **Berhenti** Putar             |
+|    Tombol    | Aksi                              |
+| :----------: | :-------------------------------- |
+|    **F4**    | Beralih **Main / Jeda**           |
+|    **F8**    | **Berhenti** Putar                |
+| **Ctrl + →** | **Berikutnya** (Lagu Selanjutnya) |
+| **Ctrl + ←** | **Sebelumnya** (Lagu Sebelumnya)  |
 
 ### Kontrol Antarmuka
 
 - **Seek**: Tarik slider progres untuk lompat ke titik mana pun.
-- **Kontrol**: Tombol **Prev / Next** untuk melewati trek.
 - **Kecepatan**: Masukkan persentase (misal, `120` untuk kecepatan 1.2x) atau gunakan panah Atas/Bawah.
 - **Daftar Putar**: Gunakan tombol ▲ / ▼ untuk mengubah urutan lagu.
+- **Navigasi**: Gunakan tombol **Next** / **Prev** untuk mengganti lagu.
 
 ## ⚙️ Konfigurasi
 
@@ -134,9 +136,11 @@ Karena alat ini menggunakan format JSON tertentu, Anda dapat menggunakan alat **
 3.  Salin output JSON yang dihasilkan.
 4.  Tempelkan ke dalam file baru di folder `Songs` (misalnya, `lagusaya.json`).
 
-> [!TIP] > **Butuh file MIDI?** Anda dapat menemukan urutan MIDI berkualitas tinggi di [OnlineSequencer.net](https://onlinesequencer.net/sequences).
+> [!TIP] 
+> **Butuh file MIDI?** Anda dapat menemukan urutan MIDI berkualitas tinggi di [OnlineSequencer.net](https://onlinesequencer.net/sequences).
 
-> [!IMPORTANT] > **🎹 Panduan Pemilihan MIDI**
+> [!IMPORTANT] 
+> **🎹 Panduan Pemilihan MIDI**
 > Instrumen dalam game terbatas pada **21 tombol diatonis** (3 oktaf tuts putih) dan **7 tombol chord**.
 >
 > - **Rentang Melodi**: C3 - B5 (Hanya tuts putih).
