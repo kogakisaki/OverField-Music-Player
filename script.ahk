@@ -28,7 +28,7 @@ global CurrentTimeMs := 0
 global StartTimeSystem := 0 
 
 global EditCtrl, MaxTapesCtrl, SB, MyGui, BtnStart, BtnStop
-global CbSustain, CbIgnoreChords, CbMono, TransposeCtrl, InfoText
+global CbSustain, CbIgnoreChords, CbMono, TransposeCtrl, InfoText, CbAutoNext
 global ProgressSlider, TimeDisplay, SpeedCtrl
 global DdlWindows, BtnRefreshWin, SongList
 global GlobalTranspose := 0
@@ -98,6 +98,7 @@ AddHide(MyGui.Add("GroupBox", "x10 y200 w520 h140", " [2] SETTINGS "))
 MyGui.SetFont("s10 norm")
 
 CbSustain := AddHide(MyGui.Add("Checkbox", "x30 yp+30 Checked", "Sustain"))
+CbAutoNext := AddHide(MyGui.Add("Checkbox", "x130 yp", "Auto-Next"))
 AddHide(MyGui.Add("Text", "x260 yp w100 Right", "Transpose:")) 
 TransposeCtrl := AddHide(MyGui.Add("Edit", "x+10 yp-3 w60 Center", "0"))
 AddHide(MyGui.Add("UpDown", "Range-24-24", 0))
@@ -291,6 +292,7 @@ SaveAndExit() {
         IniWrite(CbSustain.Value, "config.ini", "Settings", "Sustain")
         IniWrite(CbIgnoreChords.Value, "config.ini", "Settings", "NoChords")
         IniWrite(CbMono.Value, "config.ini", "Settings", "Mono")
+        IniWrite(CbAutoNext.Value, "config.ini", "Settings", "AutoNext")
     }
     ExitApp()
 }
@@ -307,6 +309,7 @@ LoadSettings() {
         sus := IniRead("config.ini", "Settings", "Sustain", 1)
         nc := IniRead("config.ini", "Settings", "NoChords", 1)
         mo := IniRead("config.ini", "Settings", "Mono", 0)
+        an := IniRead("config.ini", "Settings", "AutoNext", 0)
 
         MaxTapesCtrl.Value := mn
         SpeedCtrl.Value := sp
@@ -318,6 +321,7 @@ LoadSettings() {
         CbSustain.Value := sus
         CbIgnoreChords.Value := nc
         CbMono.Value := mo
+        CbAutoNext.Value := an
         
         UpdateStatus("⚙️ Settings loaded.", 1)
     }
@@ -574,6 +578,23 @@ StartMusic() {
         UpdateStatus("✅ Finished.")
         ProgressSlider.Value := 100
         TimeDisplay.Text := FormatTimeMs(TotalDuration) . " / " . FormatTimeMs(TotalDuration)
+        
+        if (CbAutoNext.Value) {
+            SetTimer PlayNextSong, -1000 ; Wait 1s then play next
+        }
+    }
+}
+
+PlayNextSong() {
+    global SongList, BtnStart
+    idx := SongList.Value
+    items := ControlGetItems(SongList.Hwnd)
+    if (idx < items.Length) {
+        SongList.Choose(idx + 1)
+        LoadSongFromPlaylist()
+        StartMusic()
+    } else {
+        UpdateStatus("🏁 Playlist Ended.")
     }
 }
 
@@ -947,9 +968,12 @@ AnalyzeInternal(noteString) {
 }
 
 AnalyzeAndSuggest(noteString) {
-    global TransposeCtrl, InfoText
+    global TransposeCtrl, InfoText, TotalDuration, TimeDisplay
     
     Analysis := AnalyzeInternal(noteString)
+    
+    TotalDuration := Analysis.DurationMs
+    TimeDisplay.Text := "00:00 / " . FormatTimeMs(TotalDuration)
     
     InfoText.Text := "✅ Notes: " . Analysis.TotalNotes . " | Fit: " . Analysis.FitPercent . "%`n💡 Suggest Transpose: " . (Analysis.BestShift > 0 ? "+" : "") . Analysis.BestShift
     
@@ -973,7 +997,34 @@ F4:: {
 }
 #MaxThreadsPerHotkey 1
 
+
 F8::StopMusic()
+
+OnFileDrop(GuiObj, GuiCtrlObj, FileArray, X, Y) {
+    global EditCtrl, InfoText, TotalDuration, CurrentTimeMs, ProgressSlider
+    
+    if (FileArray.Length < 1)
+        return
+
+    filepath := FileArray[1]
+    SplitPath(filepath, &name, &dir, &ext, &name_no_ext, &drive)
+    
+    if (ext != "txt" && ext != "json") {
+        MsgBox("Only .txt and .json files are supported!", "Invalid File", "48 Icon!")
+        return
+    }
+
+    try {
+        content := FileRead(filepath, "UTF-8")
+        EditCtrl.Value := content
+        UpdateStatus("📂 Loaded: " . name, 1)
+        
+        ; Auto analyze
+        AnalyzeOnly()
+    } catch as err {
+        MsgBox("Failed to read file:`n" . err.Message, "Error", "16 Icon!")
+    }
+}
 
 ToggleMiniMode() {
     global IsMiniMode, GroupHide, MyGui, BtnMiniMode, MiniModeSavedPos
