@@ -20,8 +20,7 @@
 
 </div>
 
-> [!NOTE]
-> **⚠️ Pemberitahuan Versi Game**
+> [!NOTE] > **⚠️ Pemberitahuan Versi Game**
 > Fitur **furnitur instrumen** saat ini **hanya tersedia di server China** dari "OverField" (开放空间).
 > Anda dapat mengunduhnya di sini: [Unduh Game Bilibili](https://www.biligame.com/detail/?id=114015&spm_id_from=555.224.0.0&sourceFrom=1600820011)
 
@@ -77,14 +76,17 @@
 
 ### Pintasan Keyboard
 
-| Tombol | Aksi                    |
-| :----: | :---------------------- |
-| **F4** | Beralih **Main / Jeda** |
-| **F8** | **Berhenti** Putar      |
+|      Tombol      | Aksi                           |
+| :--------------: | :----------------------------- |
+|      **F4**      | Beralih **Main / Jeda**        |
+| **Ctrl + Kiri**  | **Lagu Sebelumnya** (Previous) |
+| **Ctrl + Kanan** | **Lagu Berikutnya** (Next)     |
+|      **F8**      | **Berhenti** Putar             |
 
 ### Kontrol Antarmuka
 
 - **Seek**: Tarik slider progres untuk lompat ke titik mana pun.
+- **Kontrol**: Tombol **Prev / Next** untuk melewati trek.
 - **Kecepatan**: Masukkan persentase (misal, `120` untuk kecepatan 1.2x) atau gunakan panah Atas/Bawah.
 - **Daftar Putar**: Gunakan tombol ▲ / ▼ untuk mengubah urutan lagu.
 
@@ -132,11 +134,9 @@ Karena alat ini menggunakan format JSON tertentu, Anda dapat menggunakan alat **
 3.  Salin output JSON yang dihasilkan.
 4.  Tempelkan ke dalam file baru di folder `Songs` (misalnya, `lagusaya.json`).
 
-> [!TIP]
-> **Butuh file MIDI?** Anda dapat menemukan urutan MIDI berkualitas tinggi di [OnlineSequencer.net](https://onlinesequencer.net/sequences).
+> [!TIP] > **Butuh file MIDI?** Anda dapat menemukan urutan MIDI berkualitas tinggi di [OnlineSequencer.net](https://onlinesequencer.net/sequences).
 
-> [!IMPORTANT]
-> **🎹 Panduan Pemilihan MIDI**
+> [!IMPORTANT] > **🎹 Panduan Pemilihan MIDI**
 > Instrumen dalam game terbatas pada **21 tombol diatonis** (3 oktaf tuts putih) dan **7 tombol chord**.
 >
 > - **Rentang Melodi**: C3 - B5 (Hanya tuts putih).

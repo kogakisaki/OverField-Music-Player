@@ -27,7 +27,7 @@ global TotalDuration := 0
 global CurrentTimeMs := 0 
 global StartTimeSystem := 0 
 
-global EditCtrl, MaxTapesCtrl, SB, MyGui, BtnStart, BtnStop
+global EditCtrl, MaxTapesCtrl, SB, MyGui, BtnStart, BtnStop, BtnNext, BtnPrev
 global CbSustain, CbIgnoreChords, CbMono, TransposeCtrl, InfoText, CbAutoNext
 global ProgressSlider, TimeDisplay, SpeedCtrl
 global DdlWindows, BtnRefreshWin, SongList
@@ -137,12 +137,20 @@ MyGui.SetFont("s10 norm")
 ProgressSlider := MyGui.Add("Slider", "x20 y+5 w500 Range0-100 ToolTip NoTicks", 0)
 ProgressSlider.OnEvent("Change", (*) => OnSeek())
 
-BtnStart := MyGui.Add("Button", "x20 y+15 w340 h45", "▶ START (F4)")
+BtnStart := MyGui.Add("Button", "x20 y+15 w150 h45", "▶ START (F4)")
 BtnStart.SetFont("bold s12")
 BtnStart.OnEvent("Click", (*) => TogglePlayPause())
 
-BtnStop := MyGui.Add("Button", "x+10 w150 h45", "■ STOP (F8)")
-BtnStop.SetFont("bold s11")
+BtnPrev := MyGui.Add("Button", "x+5 w105 h45", "← PREV (^Left)")
+BtnPrev.SetFont("bold s9")
+BtnPrev.OnEvent("Click", (*) => PrevSong())
+
+BtnNext := MyGui.Add("Button", "x+5 w105 h45", "→ NEXT (^Right)")
+BtnNext.SetFont("bold s9")
+BtnNext.OnEvent("Click", (*) => SkipSong())
+
+BtnStop := MyGui.Add("Button", "x+5 w105 h45", "■ STOP (F8)")
+BtnStop.SetFont("bold s10")
 BtnStop.OnEvent("Click", (*) => StopMusic())
 
 SB := AddHide(MyGui.Add("StatusBar",, " Ready."))
@@ -157,6 +165,10 @@ BtnStart.GetPos(&ox, &oy, &ow, &oh)
 MiniModeSavedPos["Start"] := {x:ox, y:oy, w:ow, h:oh}
 BtnStop.GetPos(&ox, &oy, &ow, &oh)
 MiniModeSavedPos["Stop"] := {x:ox, y:oy, w:ow, h:oh}
+BtnNext.GetPos(&ox, &oy, &ow, &oh)
+MiniModeSavedPos["Next"] := {x:ox, y:oy, w:ow, h:oh}
+BtnPrev.GetPos(&ox, &oy, &ow, &oh)
+MiniModeSavedPos["Prev"] := {x:ox, y:oy, w:ow, h:oh}
 SB.SetParts(350, 170)
 
 ; Load Initial Data
@@ -454,7 +466,7 @@ TogglePlayPause() {
     } else {
         if (IsPaused) {
             IsPaused := false
-            BtnStart.Text := "⏸ PAUSE (F4)"
+            BtnStart.Text := " PAUSE (F4)"
             UpdateStatus("▶ Playing...", 1)
             ToolTip("▶ RESUME")
             SetTimer () => ToolTip(), -1000
@@ -596,6 +608,36 @@ PlayNextSong() {
     } else {
         UpdateStatus("🏁 Playlist Ended.")
     }
+}
+
+PlayPrevSong() {
+    global SongList, BtnStart
+    idx := SongList.Value
+    if (idx > 1) {
+        SongList.Choose(idx - 1)
+        LoadSongFromPlaylist()
+        StartMusic()
+    } else {
+        UpdateStatus("⚠️ Top of Playlist.")
+    }
+}
+
+SkipSong() {
+    global IsRunning, StopPlaying
+    if (IsRunning) {
+        StopMusic()
+        Sleep 200 ; Short wait to ensure clear state
+    }
+    PlayNextSong()
+}
+
+PrevSong() {
+    global IsRunning, StopPlaying
+    if (IsRunning) {
+        StopMusic()
+        Sleep 200
+    }
+    PlayPrevSong()
 }
 
 StopMusic() {
@@ -1000,6 +1042,9 @@ F4:: {
 
 F8::StopMusic()
 
+^Right::SkipSong()
+^Left::PrevSong()
+
 OnFileDrop(GuiObj, GuiCtrlObj, FileArray, X, Y) {
     global EditCtrl, InfoText, TotalDuration, CurrentTimeMs, ProgressSlider
     
@@ -1044,9 +1089,11 @@ ToggleMiniMode() {
         TimeDisplay.Move(10, 25, 330, 25)
         ProgressSlider.Move(10, 50, 330, 30) ; Slider needs height
         
-        wBtn := 160
-        BtnStart.Move(10, 85, wBtn, 40)
-        BtnStop.Move(10 + wBtn + 10, 85, wBtn, 40)
+        wBtn := 80
+        BtnStart.Move(5, 85, wBtn, 40)
+        BtnPrev.Move(5 + wBtn + 5, 85, wBtn, 40)
+        BtnNext.Move(5 + wBtn + 5 + wBtn + 5, 85, wBtn, 40)
+        BtnStop.Move(5 + wBtn + 5 + wBtn + 5 + wBtn + 5, 85, wBtn, 40)
         
         BtnMiniMode.Text := "Expand"
         BtnMiniMode.Move(280, 2, 60, 20) ; Top right of mini win
@@ -1059,7 +1106,10 @@ ToggleMiniMode() {
         ; Restore
         p := MiniModeSavedPos["Time"], TimeDisplay.Move(p.x, p.y, p.w, p.h)
         p := MiniModeSavedPos["Slider"], ProgressSlider.Move(p.x, p.y, p.w, p.h)
+        
         p := MiniModeSavedPos["Start"], BtnStart.Move(p.x, p.y, p.w, p.h)
+        p := MiniModeSavedPos["Prev"], BtnPrev.Move(p.x, p.y, p.w, p.h)
+        p := MiniModeSavedPos["Next"], BtnNext.Move(p.x, p.y, p.w, p.h)
         p := MiniModeSavedPos["Stop"], BtnStop.Move(p.x, p.y, p.w, p.h)
         
         BtnMiniMode.Text := "Mini Mode"

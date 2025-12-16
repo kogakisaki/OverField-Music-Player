@@ -20,8 +20,7 @@
 
 </div>
 
-> [!NOTE]
-> **⚠️ Lưu Ý Phiên Bản Game**:
+> [!NOTE] > **⚠️ Lưu Ý Phiên Bản Game**:
 > **các đồ nội thất nhạc cụ** hiện tại **chỉ mới xuất hiện ở server Trung Quốc** của "OverField" (开放空间).
 > Bạn có thể tải game tại đây: [Tải Game trên Bilibili](https://www.biligame.com/detail/?id=114015&spm_id_from=555.224.0.0&sourceFrom=1600820011)
 
@@ -43,8 +42,7 @@
 
 **OverField Music Player** là công cụ tự động hóa giúp bạn trình diễn những bản nhạc phức tạp trong game _OverField_. Tool hỗ trợ hoàn hảo cho cả **Piano** và **Guitar Điện** (vì chúng có cùng layout phím). Được viết bằng **AutoHotkey v2**, tool đảm bảo độ chính xác mili-giây và cung cấp giao diện điều khiển chuyên nghiệp như một trình phát nhạc thực thụ.
 
-> [!TIP]
-> **Thấy tool hữu ích?** Hãy ủng hộ tác giả bằng cách thả ⭐ **Star** trên GitHub nhé!
+> [!TIP] > **Thấy tool hữu ích?** Hãy ủng hộ tác giả bằng cách thả ⭐ **Star** trên GitHub nhé!
 
 ## ✨ Tính Năng Chính
 
@@ -77,14 +75,17 @@
 
 ### Phím Tắt
 
-|  Phím  | Chức năng                          |
-| :----: | :--------------------------------- |
-| **F4** | **Play / Pause** (Phát / Tạm dừng) |
-| **F8** | **Stop** (Dừng hẳn)                |
+|      Phím       | Chức năng                          |
+| :-------------: | :--------------------------------- |
+|     **F4**      | **Play / Pause** (Phát / Tạm dừng) |
+| **Ctrl + Trái** | **Previous** (Bài Trước)           |
+| **Ctrl + Phải** | **Next** (Bài Sau)                 |
+|     **F8**      | **Stop** (Dừng hẳn)                |
 
 ### Giao Diện
 
 - **Thanh Tiến Trình**: Kéo chuột để tua đến đoạn nhạc mong muốn.
+- **Điều Khiển**: Nút **Prev / Next** để chuyển bài nhanh.
 - **Tốc Độ**: Nhập % tốc độ hoặc dùng nút Lên/Xuống (Mặc định 100%).
 - **Playlist**: Dùng nút ▲ / ▼ để sắp xếp bài hát.
 
@@ -132,11 +133,9 @@ Tool này sử dụng định dạng JSON đặc biệt, bạn có thể dùng c
 3.  Copy đoạn mã JSON được tạo ra.
 4.  Paste vào một file mới trong thư mục `Songs` (ví dụ: `baihat.json`).
 
-> [!TIP]
-> **Tìm nhạc MIDI?** Bạn có thể tìm thấy các bản MIDI chất lượng tại [OnlineSequencer.net](https://onlinesequencer.net/sequences).
+> [!TIP] > **Tìm nhạc MIDI?** Bạn có thể tìm thấy các bản MIDI chất lượng tại [OnlineSequencer.net](https://onlinesequencer.net/sequences).
 
-> [!IMPORTANT]
-> **🎹 Lưu Ý Khi Chọn MIDI**
+> [!IMPORTANT] > **🎹 Lưu Ý Khi Chọn MIDI**
 > Đàn trong game được thiết kế giới hạn với **21 phím giai điệu** (3 quãng tám phím trắng) và **7 phím hợp âm**.
 >
 > - **Phạm vi giai điệu**: C3 - B5 (Chỉ phím trắng).
