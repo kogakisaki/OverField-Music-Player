@@ -54,9 +54,9 @@ BtnMiniMode := MyGui.Add("Button", "x450 y5 w80 h20", "Mini Mode")
 BtnMiniMode.SetFont("s8")
 BtnMiniMode.OnEvent("Click", (*) => ToggleMiniMode())
 
-; --- SECTION 1: LIBRARY & SOURCE ---
+; --- SECTION 1: LIBRARY + SOURCE ---
 MyGui.SetFont("s10 bold")
-AddHide(MyGui.Add("GroupBox", "x10 y10 w520 h180", " [1] LIBRARY & SOURCE "))
+AddHide(MyGui.Add("GroupBox", "x10 y10 w520 h180", " [1] LIBRARY + SOURCE "))
 MyGui.SetFont("s10 norm")
 
 AddHide(MyGui.Add("Text", "xp+15 yp+25", "Playlist (Folder 'Songs'):"))
