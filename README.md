@@ -48,6 +48,8 @@
 
 ## ✨ Key Features
 
+| Feature | Description |
+| :--- | :--- |
 | **🎯 Precision Timing** | Uses `timeBeginPeriod(1)` and hybrid wait loops for accurate note execution. |
 | **📂 Music Library** | Built-in playlist manager to organize `.json` song files. |
 | **🎛️ Live Control** | Adjust **Speed (10-500%)**, **Transpose**, and **Seek** in real-time. |

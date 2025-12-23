@@ -47,6 +47,8 @@
 
 ## ✨ Fitur Utama
 
+| Fitur | Deskripsi |
+| :--- | :--- |
 | **🎯 Waktu Presisi** | Menggunakan `timeBeginPeriod(1)` dan loop tunggu hibrida untuk eksekusi nada yang akurat. |
 | **📂 Pustaka Musik** | Manajer daftar putar bawaan untuk mengatur file lagu `.json`. |
 | **🎛️ Kontrol Langsung** | Sesuaikan **Kecepatan (10-500%)**, **Transpose**, dan **Seek** secara real-time. |

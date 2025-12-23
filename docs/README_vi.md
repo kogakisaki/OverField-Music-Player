@@ -48,6 +48,8 @@
 
 ## ✨ Tính Năng Chính
 
+| Tính năng | Mô tả |
+| :--- | :--- |
 | **🎯 Timing Chuẩn** | Dùng thuật toán hybird wait loop và `timeBeginPeriod(1)` để gõ phím cực chuẩn. |
 | **📂 Thư Viện Nhạc** | Quản lý, sắp xếp và load file nhạc `.json` ngay trong tool. |
 | **🎛️ Chỉnh Real-time** | Chỉnh **Tốc độ (10-500%)**, **Transpose (Tông)**, và **Tua nhạc** khi đang chơi. |
