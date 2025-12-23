@@ -20,7 +20,7 @@
 
 </div>
 
-> [!NOTE] 
+> [!NOTE]
 > **⚠️ Lưu Ý Phiên Bản Game**:
 > **các đồ nội thất nhạc cụ** hiện tại **chỉ mới xuất hiện ở server Trung Quốc** của "OverField" (开放空间).
 > Bạn có thể tải game tại đây: [Tải Game trên Bilibili](https://www.biligame.com/detail/?id=114015&spm_id_from=555.224.0.0&sourceFrom=1600820011)
@@ -43,18 +43,18 @@
 
 **OverField Music Player** là công cụ tự động hóa giúp bạn trình diễn những bản nhạc phức tạp trong game _OverField_. Tool hỗ trợ hoàn hảo cho cả **Piano** và **Guitar Điện** (vì chúng có cùng layout phím). Được viết bằng **AutoHotkey v2**, tool đảm bảo độ chính xác mili-giây và cung cấp giao diện điều khiển chuyên nghiệp như một trình phát nhạc thực thụ.
 
-> [!TIP] 
+> [!TIP]
 > **Thấy tool hữu ích?** Hãy ủng hộ tác giả bằng cách thả ⭐ **Star** trên GitHub nhé!
 
 ## ✨ Tính Năng Chính
 
-| Tính Năng              | Mô Tả                                                                            |
-| :--------------------- | :------------------------------------------------------------------------------- |
-| **🎯 Timing Chuẩn**    | Dùng thuật toán hybird wait loop và `timeBeginPeriod(1)` để gõ phím cực chuẩn.   |
-| **📂 Thư Viện Nhạc**   | Quản lý, sắp xếp và load file nhạc `.json` ngay trong tool.                      |
+| **🎯 Timing Chuẩn** | Dùng thuật toán hybird wait loop và `timeBeginPeriod(1)` để gõ phím cực chuẩn. |
+| **📂 Thư Viện Nhạc** | Quản lý, sắp xếp và load file nhạc `.json` ngay trong tool. |
 | **🎛️ Chỉnh Real-time** | Chỉnh **Tốc độ (10-500%)**, **Transpose (Tông)**, và **Tua nhạc** khi đang chơi. |
-| **🧠 Thông Minh**      | **Tự Động Pause** khi Alt-Tab ra ngoài, **Chế Độ Tối Ưu** cho bài nhạc nặng.     |
-| **🎹 Chế Độ Cao Cấp**  | Hỗ trợ **Sustain** (giữ phím) và **Mono Mode** (đơn âm).                         |
+| **🎹 Nhập MIDI** | **Mới!** Chuyển file `.mid` sang JSON trực tiếp qua API tích hợp (Beta). |
+| **🔁 Chế Độ Lặp** | **Mới!** Tự động phát lại bài hát hiện tại. |
+| **🧠 Thông Minh** | **Tự Động Pause** khi Alt-Tab ra ngoài, **Chế Độ Tối Ưu** cho bài nhạc nặng. |
+| **🎹 Chế Độ Cao Cấp** | Hỗ trợ **Sustain** (giữ phím) và **Mono Mode** (đơn âm). |
 
 ## 🚀 Cài Đặt
 
@@ -98,6 +98,8 @@ Cài đặt được lưu tự động vào `config.ini`:
 - **Sustain**: Giữ phím nhấn xuống theo độ dài nốt nhạc.
 - **No Chords**: Bỏ qua các nốt trầm (hàng phím z, x, c...).
 - **Mono Mode**: Chỉ chơi 1 nốt tại một thời điểm (ưu tiên nốt cao/mới nhất).
+- **Auto-Next**: Tự động phát bài tiếp theo trong thư viện.
+- **Loop**: Tự động phát lại bài hiện tại khi kết thúc.
 - **Max Polyphony**: Giới hạn số phím nhấn cùng lúc (tránh anti-cheat hoặc mất nốt).
 
 ## 📁 Định Dạng Nhạc
@@ -128,17 +130,27 @@ Tool làm việc với file JSON có cấu trúc sau:
 
 ### Cách Chuyển MIDI sang JSON
 
-Tool này sử dụng định dạng JSON đặc biệt, bạn có thể dùng công cụ **Tone.js MIDI** để convert file `.mid`:
+Bạn có hai cách để chuẩn bị bài hát của mình:
+
+#### Cách 1: Trình Chuyển Đổi Tích Hợp (Khuyên dùng)
+
+1. Nhấn nút **🎹 Import MIDI (Beta)** trong script.
+2. Chọn file `.mid` hoặc `.midi` của bạn.
+3. Script sẽ tự động chuyển đổi qua API và hỏi bạn có muốn lưu vào thư viện hay không.
+
+#### Cách 2: Chuyển Đổi Thủ Công Qua Web
+
+Nếu trình chuyển đổi tích hợp gặp sự cố, bạn vẫn có thể dùng công cụ **Tone.js MIDI**:
 
 1.  Truy cập trang [https://tonejs.github.io/Midi/](https://tonejs.github.io/Midi/).
 2.  Kéo thả file MIDI của bạn vào trang web.
 3.  Copy đoạn mã JSON được tạo ra.
 4.  Paste vào một file mới trong thư mục `Songs` (ví dụ: `baihat.json`).
 
-> [!TIP] 
+> [!TIP]
 > **Tìm nhạc MIDI?** Bạn có thể tìm thấy các bản MIDI chất lượng tại [OnlineSequencer.net](https://onlinesequencer.net/sequences).
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > **🎹 Lưu Ý Khi Chọn MIDI**
 > Đàn trong game được thiết kế giới hạn với **21 phím giai điệu** (3 quãng tám phím trắng) và **7 phím hợp âm**.
 >
@@ -148,7 +160,7 @@ Tool này sử dụng định dạng JSON đặc biệt, bạn có thể dùng c
 
 ## 📝 To-Do / Kế Hoạch Phát Triển
 
-- [ ] **Hỗ trợ file MIDI**: Đọc trực tiếp file `.mid` mà không cần convert sang JSON.
+- [x] **Hỗ trợ file MIDI**: Tích hợp API chuyển đổi MIDI sang JSON (Beta).
 - [ ] **Tùy chỉnh phím**: Cho phép người dùng tự map nốt MIDI sang phím bất kỳ trên giao diện.
 - [ ] **Giao diện Theme**: Thêm Dark mode và tùy chỉnh màu sắc.
 - [ ] **Hiển thị trực quan**: Thêm overlay bàn phím ảo để nhìn thấy nốt đang gõ.

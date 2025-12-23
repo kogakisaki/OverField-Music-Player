@@ -20,8 +20,7 @@
 
 </div>
 
-> [!NOTE] 
-> **⚠️ Pemberitahuan Versi Game**
+> [!NOTE] > **⚠️ Pemberitahuan Versi Game**
 > Fitur **furnitur instrumen** saat ini **hanya tersedia di server China** dari "OverField" (开放空间).
 > Anda dapat mengunduhnya di sini: [Unduh Game Bilibili](https://www.biligame.com/detail/?id=114015&spm_id_from=555.224.0.0&sourceFrom=1600820011)
 
@@ -44,18 +43,17 @@
 
 **OverField Music Player** adalah skrip otomatisasi presisi tinggi yang dirancang untuk memainkan aransemen musik yang kompleks dalam game _OverField_. Alat ini sepenuhnya mendukung **Piano** dan **Gitar Listrik** (karena memiliki tata letak tombol yang sama). Dibuat dengan **AutoHotkey v2**, alat ini menjembatani komposisi MIDI dengan kinerja dalam game, menawarkan waktu akurat hingga milidetik dan kontrol real-time.
 
-> [!TIP] 
-> **Suka dengan alat ini?** Mohon pertimbangkan untuk memberikan ⭐ **Bintang** di GitHub untuk mendukung pengembangan!
+> [!TIP] > **Suka dengan alat ini?** Mohon pertimbangkan untuk memberikan ⭐ **Bintang** di GitHub untuk mendukung pengembangan!
 
 ## ✨ Fitur Utama
 
-| Fitur                      | Deskripsi                                                                                 |
-| :------------------------- | :---------------------------------------------------------------------------------------- |
-| **🎯 Waktu Presisi**       | Menggunakan `timeBeginPeriod(1)` dan loop tunggu hibrida untuk eksekusi nada yang akurat. |
-| **📂 Pustaka Musik**       | Manajer daftar putar bawaan untuk mengatur file lagu `.json`.                             |
-| **🎛️ Kontrol Langsung**    | Sesuaikan **Kecepatan (10-500%)**, **Transpose**, dan **Seek** secara real-time.          |
-| **🧠 Logika Cerdas**       | **Jeda Otomatis** saat Alt-Tab, **Mode Optimasi** untuk lagu berat.                       |
-| **🎹 Main Tingkat Lanjut** | Dukungan **Sustain** dan **Mode Mono** untuk melodi yang lebih bersih.                    |
+| **🎯 Waktu Presisi** | Menggunakan `timeBeginPeriod(1)` dan loop tunggu hibrida untuk eksekusi nada yang akurat. |
+| **📂 Pustaka Musik** | Manajer daftar putar bawaan untuk mengatur file lagu `.json`. |
+| **🎛️ Kontrol Langsung** | Sesuaikan **Kecepatan (10-500%)**, **Transpose**, dan **Seek** secara real-time. |
+| **🎹 Impor MIDI** | **Baru!** Konversi file `.mid` ke JSON langsung melalui API bawaan (Beta). |
+| **🔁 Mode Loop** | **Baru!** Ulangi lagu saat ini secara otomatis. |
+| **🧠 Logika Cerdas** | **Jeda Otomatis** saat Alt-Tab, **Mode Optimasi** untuk lagu berat. |
+| **🎹 Main Tingkat Lanjut** | Dukungan **Sustain** dan **Mode Mono** untuk melodi yang lebih bersih. |
 
 ## 🚀 Instalasi
 
@@ -99,6 +97,8 @@ Pengaturan disimpan secara otomatis ke `config.ini`:
 - **Sustain**: Menahan tombol selama durasi nada.
 - **No Chords**: Mengabaikan tombol oktaf rendah (z, x, c...) yang biasanya digunakan untuk chord.
 - **Mono Mode**: Hanya memainkan satu nada pada satu waktu (prioritas tertinggi).
+- **Lanjut Otomatis**: Memutar lagu berikutnya di perpustakaan secara otomatis.
+- **Ulangi**: Memutar ulang lagu saat ini secara otomatis setelah selesai.
 - **Max Polyphony**: Membatasi penekanan tombol simultan (menghindari anti-spam game).
 
 ## 📁 Format Lagu
@@ -129,18 +129,26 @@ Skrip menerima struktur JSON tertentu. Contoh:
 
 ### Cara Mengonversi MIDI ke JSON
 
-Karena alat ini menggunakan format JSON tertentu, Anda dapat menggunakan alat **Tone.js MIDI** untuk mengonversi file `.mid` Anda:
+Ada hai cara untuk menyiapkan lagu Anda:
+
+#### Metode 1: Pengimpor Bawaan (Direkomendasikan)
+
+1. Klik tombol **🎹 Import MIDI (Beta)** di skrip.
+2. Pilih file `.mid` atau `.midi` Anda.
+3. Skrip akan otomatis mengonversi melalui API dan menanyakan apakah Anda ingin menyimpannya ke pustaka.
+
+#### Metode 2: Konversi Web Manual
+
+Jika pengimpor bawaan bermasalah, Anda masih dapat menggunakan alat **Tone.js MIDI**:
 
 1.  Buka [https://tonejs.github.io/Midi/](https://tonejs.github.io/Midi/).
-2.  Seret dan lepas (drag and drop) file MIDI Anda ke halaman tersebut.
+2.  Seret dan lepas file MIDI Anda ke halaman tersebut.
 3.  Salin output JSON yang dihasilkan.
 4.  Tempelkan ke dalam file baru di folder `Songs` (misalnya, `lagusaya.json`).
 
-> [!TIP] 
-> **Butuh file MIDI?** Anda dapat menemukan urutan MIDI berkualitas tinggi di [OnlineSequencer.net](https://onlinesequencer.net/sequences).
+> [!TIP] > **Butuh file MIDI?** Anda dapat menemukan urutan MIDI berkualitas tinggi di [OnlineSequencer.net](https://onlinesequencer.net/sequences).
 
-> [!IMPORTANT] 
-> **🎹 Panduan Pemilihan MIDI**
+> [!IMPORTANT] > **🎹 Panduan Pemilihan MIDI**
 > Instrumen dalam game terbatas pada **21 tombol diatonis** (3 oktaf tuts putih) dan **7 tombol chord**.
 >
 > - **Rentang Melodi**: C3 - B5 (Hanya tuts putih).
@@ -149,7 +157,7 @@ Karena alat ini menggunakan format JSON tertentu, Anda dapat menggunakan alat **
 
 ## 📝 To-Do / Roadmap
 
-- [ ] **Dukungan MIDI Langsung**: Menambahkan dukungan untuk mem-parsing file `.mid` secara langsung.
+- [x] **Dukungan MIDI Langsung**: API pengonversi MIDI ke JSON bawaan (Beta).
 - [ ] **Keybinding Kustom**: Mengizinkan pengguna memetakan nada MIDI ke tombol kustom via UI.
 - [ ] **Dukungan Tema**: Mode gelap dan skema warna kustom.
 - [ ] **Overlay Visual**: Overlay piano visual untuk melihat tombol mana yang ditekan.

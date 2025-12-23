@@ -28,7 +28,7 @@ global CurrentTimeMs := 0
 global StartTimeSystem := 0 
 
 global EditCtrl, MaxTapesCtrl, SB, MyGui, BtnStart, BtnStop, BtnNext, BtnPrev
-global CbSustain, CbIgnoreChords, CbMono, TransposeCtrl, InfoText, CbAutoNext
+global CbSustain, CbIgnoreChords, CbMono, TransposeCtrl, InfoText, CbAutoNext, CbLoop
 global ProgressSlider, TimeDisplay, SpeedCtrl
 global DdlWindows, BtnRefreshWin, SongList
 global GlobalTranspose := 0
@@ -56,7 +56,7 @@ BtnMiniMode.OnEvent("Click", (*) => ToggleMiniMode())
 
 ; --- SECTION 1: LIBRARY + SOURCE ---
 MyGui.SetFont("s10 bold")
-AddHide(MyGui.Add("GroupBox", "x10 y10 w520 h180", " [1] LIBRARY + SOURCE "))
+AddHide(MyGui.Add("GroupBox", "x10 y10 w520 h210", " [1] LIBRARY + SOURCE "))
 MyGui.SetFont("s10 norm")
 
 AddHide(MyGui.Add("Text", "xp+15 yp+25", "Playlist (Folder 'Songs'):"))
@@ -74,6 +74,10 @@ BtnRefreshLib.OnEvent("Click", (*) => RefreshPlaylist())
 
 BtnOpenFolder := AddHide(MyGui.Add("Button", "x+10 yp w105 h28", "📂 Open Dir"))
 BtnOpenFolder.OnEvent("Click", (*) => Run("Songs"))
+
+BtnImportMidi := AddHide(MyGui.Add("Button", "x25 y+5 w220 h28", "🎹 Import MIDI (Beta)"))
+BtnImportMidi.SetFont("bold")
+BtnImportMidi.OnEvent("Click", (*) => PickAndConvertMidi())
 
 AddHide(MyGui.Add("Text", "x260 y35", "Manual Input / Preview:"))
 
@@ -94,7 +98,7 @@ InfoText := AddHide(MyGui.Add("Text", "x260 y+2 w260 r1 cBlue Right", "Waiting f
 
 ; --- SECTION 2: SETTINGS ---
 MyGui.SetFont("s10 bold")
-AddHide(MyGui.Add("GroupBox", "x10 y200 w520 h140", " [2] SETTINGS "))
+AddHide(MyGui.Add("GroupBox", "x10 y230 w520 h140", " [2] SETTINGS "))
 MyGui.SetFont("s10 norm")
 
 CbSustain := AddHide(MyGui.Add("Checkbox", "x30 yp+30 Checked", "Sustain"))
@@ -103,7 +107,8 @@ AddHide(MyGui.Add("Text", "x260 yp w100 Right", "Transpose:"))
 TransposeCtrl := AddHide(MyGui.Add("Edit", "x+10 yp-3 w60 Center", "0"))
 AddHide(MyGui.Add("UpDown", "Range-24-24", 0))
 
-CbIgnoreChords := AddHide(MyGui.Add("Checkbox", "x30 y+15 Checked", "No Chords"))
+CbLoop := AddHide(MyGui.Add("Checkbox", "x130 y+15", "Loop"))
+CbIgnoreChords := AddHide(MyGui.Add("Checkbox", "x30 yp Checked", "No Chords"))
 AddHide(MyGui.Add("Text", "x260 yp w100 Right", "Max Notes:")) 
 MaxTapesCtrl := AddHide(MyGui.Add("Edit", "x+10 yp-3 w60 Number Center", "15"))
 AddHide(MyGui.Add("UpDown", "Range1-50", 15))
@@ -118,7 +123,7 @@ AddHide(MyGui.Add("Text", "x+5 yp w20", "%"))
 
 ; --- SECTION 3: CONTROLS ---
 MyGui.SetFont("s10 bold")
-AddHide(MyGui.Add("GroupBox", "x10 y350 w520 h170", " [3] CONTROLS "))
+AddHide(MyGui.Add("GroupBox", "x10 y380 w520 h170", " [3] CONTROLS "))
 MyGui.SetFont("s10 norm")
 
 AddHide(MyGui.Add("Text", "xp+20 yp+25", "Target:"))
@@ -176,7 +181,7 @@ RefreshWindowList()
 RefreshPlaylist()
 LoadSettings()
 
-MyGui.Show("w540 h560")
+MyGui.Show("w540 h590")
 
 ; ==============================================================================
 ; PLAYLIST MANAGEMENT
@@ -291,6 +296,61 @@ SaveSongToLibrary() {
     }
 }
 
+PickAndConvertMidi() {
+    SelectedFile := FileSelect(3, , "Select MIDI File", "MIDI Files (*.mid; *.midi)")
+    if (SelectedFile = "")
+        return
+    
+    ConvertMidiToJson(SelectedFile)
+}
+
+ConvertMidiToJson(filePath) {
+    global EditCtrl, InfoText, MyGui
+    
+    UpdateStatus("🚀 Uploading MIDI...", 1)
+    InfoText.Text := "⏳ Converting MIDI to JSON..."
+    InfoText.Opt("cFF8C00")
+
+    try {
+        ; Endpoint provided by user
+        url := "https://eienmojiki-midi-to-tone-js.hf.space/api/convert"
+        
+        ; Use the community-proven CreateFormData class to handle the multipart request
+        ; The server expects the field name 'midiFile'
+        objParam := { midiFile: [filePath] }
+        
+        CreateFormData(&PostData, &hdr_ContentType, objParam)
+
+        ; Send Request
+        Http := ComObject("WinHttp.WinHttpRequest.5.1")
+        Http.Open("POST", url, false)
+        Http.SetRequestHeader("Content-Type", hdr_ContentType)
+        Http.SetRequestHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36")
+        Http.Send(PostData)
+        
+        if (Http.Status != 200) {
+            throw Error("API Error: " . Http.Status . " " . Http.StatusText . "`nBody: " . Http.ResponseText)
+        }
+
+        jsonResponse := Http.ResponseText
+        UpdateStatus("✅ Conversion Successful!", 1)
+        
+        ; Prompt to Save
+        EditCtrl.Value := jsonResponse
+        AnalyzeOnly()
+        
+        res := MsgBox("MIDI Converted!`nDo you want to save this to your library?", "Success", "YesNo 4096 Icon!")
+        if (res == "Yes")
+            SaveSongToLibrary()
+            
+    } catch as err {
+        UpdateStatus("❌ Import Failed", 1)
+        MsgBox("Import Error:`n" . err.Message, "Error", "4096 Icon!")
+        InfoText.Text := "Import failed."
+        InfoText.Opt("cRed")
+    }
+}
+
 ; ==============================================================================
 ; SETTINGS MANAGEMENT (INI FILE)
 ; ==============================================================================
@@ -305,6 +365,7 @@ SaveAndExit() {
         IniWrite(CbIgnoreChords.Value, "config.ini", "Settings", "NoChords")
         IniWrite(CbMono.Value, "config.ini", "Settings", "Mono")
         IniWrite(CbAutoNext.Value, "config.ini", "Settings", "AutoNext")
+        IniWrite(CbLoop.Value, "config.ini", "Settings", "Loop")
     }
     ExitApp()
 }
@@ -322,6 +383,7 @@ LoadSettings() {
         nc := IniRead("config.ini", "Settings", "NoChords", 1)
         mo := IniRead("config.ini", "Settings", "Mono", 0)
         an := IniRead("config.ini", "Settings", "AutoNext", 0)
+        lp := IniRead("config.ini", "Settings", "Loop", 0)
 
         MaxTapesCtrl.Value := mn
         SpeedCtrl.Value := sp
@@ -334,6 +396,7 @@ LoadSettings() {
         CbIgnoreChords.Value := nc
         CbMono.Value := mo
         CbAutoNext.Value := an
+        CbLoop.Value := lp
         
         UpdateStatus("⚙️ Settings loaded.", 1)
     }
@@ -354,7 +417,7 @@ OpenJsonEditor() {
     } catch {
         BigEdit.Value := ""
     }
-    BtnSave := JsonGui.Add("Button", "xm w295 h40", "Save & Close")
+    BtnSave := JsonGui.Add("Button", "xm w295 h40", "Save and Close")
     BtnSave.SetFont("bold")
     BtnSave.OnEvent("Click", (*) => SaveJson(BigEdit.Value, JsonGui))
     BtnCancel := JsonGui.Add("Button", "x+10 w295 h40", "Cancel")
@@ -591,7 +654,10 @@ StartMusic() {
         ProgressSlider.Value := 100
         TimeDisplay.Text := FormatTimeMs(TotalDuration) . " / " . FormatTimeMs(TotalDuration)
         
-        if (CbAutoNext.Value) {
+        if (CbLoop.Value) {
+            UpdateStatus("🔁 Replaying...", 1)
+            SetTimer StartMusic, -1000
+        } else if (CbAutoNext.Value) {
             SetTimer PlayNextSong, -1000 ; Wait 1s then play next
         }
     }
@@ -1115,6 +1181,96 @@ ToggleMiniMode() {
         BtnMiniMode.Text := "Mini Mode"
         BtnMiniMode.Move(450, 5, 80, 20)
         
-        MyGui.Show("w540 h560")
+        MyGui.Show("w540 h590")
+    }
+}
+
+; ==============================================================================
+; CREATE FORMDATA CLASS
+; ==============================================================================
+; CreateFormData() by tmplinshi, AHK Topic: https://autohotkey.com/boards/viewtopic.php?t=7647
+; Modified version by iseahound in September 2022
+; Converted to v2 by RaptorX 19/01/2023
+
+Class CreateFormData {
+    __New(&retData, &retHeader, objParam) {
+        Local CRLF := "`r`n", i, k, v, str, pvData
+        Local Boundary := CreateFormData.RandomBoundary()
+        Local BoundaryLine := "------------------------------" . Boundary
+
+        hData := DllCall("GlobalAlloc", "uint", 0x2, "uptr", 0, "ptr")
+        DllCall("ole32\CreateStreamOnHGlobal", "ptr", hData, "int", False, "ptr*", &pStream:=0, "uint")
+        CreateFormData.pStream := pStream
+
+        For k, v in objParam.OwnProps() {
+            If IsObject(v) {
+                For i, FileName in v {
+                    str := BoundaryLine . CRLF
+                        . 'Content-Disposition: form-data; name="' . k . '"; filename="' . FileName . '"' . CRLF
+                        . 'Content-Type: ' . CreateFormData.MimeType(FileName) . CRLF . CRLF
+                    CreateFormData.StrPutUTF8(str)
+                    CreateFormData.LoadFromFile(FileName)
+                    CreateFormData.StrPutUTF8(CRLF)
+                }
+            } Else {
+                str := BoundaryLine . CRLF
+                    . 'Content-Disposition: form-data; name="' . k . '"' . CRLF . CRLF
+                    . v . CRLF
+                CreateFormData.StrPutUTF8(str)
+            }
+        }
+
+        CreateFormData.StrPutUTF8(BoundaryLine . "--" . CRLF)
+        CreateFormData.pStream := ObjRelease(pStream) ; Should be 0.
+        pData := DllCall("GlobalLock", "ptr", hData, "ptr")
+        size := DllCall("GlobalSize", "ptr", pData, "uptr")
+
+        retData := ComObjArray(0x11, size)
+        pvData  := NumGet(ComObjValue(retData), 8 + A_PtrSize, "ptr")
+        DllCall("RtlMoveMemory", "Ptr", pvData, "Ptr", pData, "Ptr", size)
+
+        DllCall("GlobalUnlock", "ptr", hData)
+        DllCall("GlobalFree", "Ptr", hData, "Ptr")
+        retHeader := "multipart/form-data; boundary=----------------------------" . Boundary
+    }
+
+    static StrPutUTF8(str) {
+        buf := Buffer(StrPut(str, "UTF-8") - 1)
+        StrPut(str, buf, buf.size, "UTF-8")
+        DllCall("shlwapi\IStream_Write", "ptr", CreateFormData.pStream, "ptr", buf.Ptr, "uint", buf.Size, "uint")
+    }
+
+    static LoadFromFile(filepath) {
+        if !FileExist(filepath)
+            return
+        DllCall("shlwapi\SHCreateStreamOnFileEx", "wstr", filepath, "uint", 0x0, "uint", 0x80, "int", False, "ptr", 0, "ptr*", &pFileStream:=0, "uint")
+        DllCall("shlwapi\IStream_Size", "ptr", pFileStream, "uint64*", &size:=0, "uint")
+        DllCall("shlwapi\IStream_Copy", "ptr", pFileStream, "ptr", CreateFormData.pStream, "uint", size, "uint")
+        ObjRelease(pFileStream)
+    }
+
+    static RandomBoundary() {
+        str := "0123456789abcdefghijklmnopqrstuvwxyz"
+        loop 10 {
+            Sort str, 'Random'
+        }
+        Return SubStr(str, 1, 12)
+    }
+
+    static MimeType(FileName) {
+        try {
+            f := FileOpen(FileName, "r")
+            n := f.ReadUInt()
+            f.Close()
+            Return (n        = 0x474E5089) ? "image/png"
+                :  (n        = 0x38464947) ? "image/gif"
+                :  (n&0xFFFF = 0x4D42    ) ? "image/bmp"
+                :  (n&0xFFFF = 0xD8FF    ) ? "image/jpeg"
+                :  (n&0xFFFF = 0x4949    ) ? "image/tiff"
+                :  (n&0xFFFF = 0x4D4D    ) ? "image/tiff"
+                :  "application/octet-stream"
+        } catch {
+            return "application/octet-stream"
+        }
     }
 }

@@ -20,7 +20,7 @@
 
 </div>
 
-> [!NOTE] 
+> [!NOTE]
 > **⚠️ Game Version Notice**
 > The **musical furniture** is currently **only available in the Chinese server** of "OverField" (开放空间).
 > You can download it here: [Bilibili Game Download](https://www.biligame.com/detail/?id=114015&spm_id_from=555.224.0.0&sourceFrom=1600820011)
@@ -43,18 +43,18 @@
 
 **OverField Music Player** is a high-precision automation script designed to play complex musical arrangements in the game _OverField_. It fully supports **Piano** and **Electric Guitar** (which share the same key layout). Built with **AutoHotkey v2**, it bridges the gap between MIDI compositions and in-game performance, offering millisecond-accurate timing and a suite of real-time controls.
 
-> [!TIP] 
+> [!TIP]
 > **Enjoying the tool?** Please consider giving this project a ⭐ **Star** on GitHub to support development!
 
 ## ✨ Key Features
 
-| Feature                 | Description                                                                  |
-| :---------------------- | :--------------------------------------------------------------------------- |
 | **🎯 Precision Timing** | Uses `timeBeginPeriod(1)` and hybrid wait loops for accurate note execution. |
-| **📂 Music Library**    | Built-in playlist manager to organize `.json` song files.                    |
-| **🎛️ Live Control**     | Adjust **Speed (10-500%)**, **Transpose**, and **Seek** in real-time.        |
-| **🧠 Smart Logic**      | **Auto-Pause** on Alt-Tab, **Optimization Mode** for heavy songs.            |
-| **🎹 Advanced Play**    | **Sustain** support and **Mono Mode** for cleaner melodies.                  |
+| **📂 Music Library** | Built-in playlist manager to organize `.json` song files. |
+| **🎛️ Live Control** | Adjust **Speed (10-500%)**, **Transpose**, and **Seek** in real-time. |
+| **🎹 MIDI Import** | **New!** Convert `.mid` files to JSON directly via built-in API (Beta). |
+| **🔁 Loop Mode** | **New!** Repeat the current song automatically. |
+| **🧠 Smart Logic** | **Auto-Pause** on Alt-Tab, **Optimization Mode** for heavy songs. |
+| **🎹 Advanced Play** | **Sustain** support and **Mono Mode** for cleaner melodies. |
 
 ## 🚀 Installation
 
@@ -98,6 +98,8 @@ Settings are auto-saved to `config.ini`:
 - **Sustain**: Keeps keys pressed for the duration of the note.
 - **No Chords**: Ignores lower-octave keys (z, x, c...) usually used for chords.
 - **Mono Mode**: Plays only one note at a time (highest priority).
+- **Auto-Next**: Automatically plays the next song in the library.
+- **Loop**: Automatically replays the current song when it ends.
 - **Max Polyphony**: Limits simultaneous scrypt key presses.
 
 ## 📁 Song Format
@@ -128,17 +130,27 @@ The script accepts specific JSON structure. Example:
 
 ### How to Convert MIDI to JSON
 
-Since this tool uses a specific JSON format, you can use the **Tone.js MIDI** tool to convert your `.mid` files:
+You have two ways to get your songs ready:
+
+#### Method 1: Built-in Importer (Recommended)
+
+1. Click the **🎹 Import MIDI (Beta)** button in the script.
+2. Select your `.mid` or `.midi` file.
+3. The script will automatically convert it via API and ask if you want to save it to your library.
+
+#### Method 2: Manual Web Conversion
+
+If the built-in importer is down, you can still use the **Tone.js MIDI** tool:
 
 1.  Go to [https://tonejs.github.io/Midi/](https://tonejs.github.io/Midi/).
 2.  Drag and drop your MIDI file onto the page.
 3.  Copy the generated JSON output.
 4.  Paste it into a new file in the `Songs` folder (e.g., `mysong.json`).
 
-> [!TIP] 
+> [!TIP]
 > **Need MIDI files?** You can find high-quality MIDI sequences at [OnlineSequencer.net](https://onlinesequencer.net/sequences).
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > **🎹 MIDI Selection Guide**
 > The in-game instrument is limited to **21 diatonic keys** (3 octaves of white keys only) and **7 chord keys**.
 >
@@ -148,7 +160,7 @@ Since this tool uses a specific JSON format, you can use the **Tone.js MIDI** to
 
 ## 📝 To-Do / Roadmap
 
-- [ ] **Direct MIDI Support**: Add support for parsing `.mid` files directly without conversion to JSON.
+- [x] **Direct MIDI Support**: Built-in MIDI to JSON converter API (Beta).
 - [ ] **Custom Keybinding**: Allow users to map MIDI notes to custom keys via UI.
 - [ ] **Theme Support**: Dark mode and custom color schemes for the definition.
 - [ ] **Visual Overlay**: A visual piano overlay to see which keys are being pressed.
