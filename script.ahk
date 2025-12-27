@@ -30,7 +30,7 @@ global StartTimeSystem := 0
 global EditCtrl, MaxTapesCtrl, SB, MyGui, BtnStart, BtnStop, BtnNext, BtnPrev
 global CbSustain, CbIgnoreChords, CbMono, TransposeCtrl, InfoText, CbAutoNext, CbLoop
 global ProgressSlider, TimeDisplay, SpeedCtrl
-global DdlWindows, BtnRefreshWin, SongList
+global DdlWindows, BtnRefreshWin, SongList, SearchCtrl
 global GlobalTranspose := 0
 global GlobalSpeed := 1.0 
 global IsMiniMode := false
@@ -56,10 +56,14 @@ BtnMiniMode.OnEvent("Click", (*) => ToggleMiniMode())
 
 ; --- SECTION 1: LIBRARY + SOURCE ---
 MyGui.SetFont("s10 bold")
-AddHide(MyGui.Add("GroupBox", "x10 y10 w520 h210", " [1] LIBRARY + SOURCE "))
+AddHide(MyGui.Add("GroupBox", "x10 y10 w520 h235", " [1] LIBRARY + SOURCE "))
 MyGui.SetFont("s10 norm")
 
 AddHide(MyGui.Add("Text", "xp+15 yp+25", "Playlist (Folder 'Songs'):"))
+SearchCtrl := AddHide(MyGui.Add("Edit", "y+5 w190 vSearchQuery", ""))
+SendMessage(0x1501, 1, StrPtr("Search songs..."), SearchCtrl.Hwnd) ; EM_SETCUEBANNER
+SearchCtrl.OnEvent("Change", (ctrl, *) => RefreshPlaylist(ctrl.Value))
+
 SongList := AddHide(MyGui.Add("ListBox", "y+5 w190 h100 vSelectedSong"))
 SongList.OnEvent("DoubleClick", (*) => LoadSongFromPlaylist())
 
@@ -70,7 +74,7 @@ BtnMoveDown := AddHide(MyGui.Add("Button", "xp y+2 w28 h49", "▼"))
 BtnMoveDown.OnEvent("Click", (*) => MoveSongDown())
 
 BtnRefreshLib := AddHide(MyGui.Add("Button", "x25 y+5 w105 h28", "⟳ Refresh"))
-BtnRefreshLib.OnEvent("Click", (*) => RefreshPlaylist())
+BtnRefreshLib.OnEvent("Click", (*) => RefreshPlaylist(SearchCtrl.Value))
 
 BtnOpenFolder := AddHide(MyGui.Add("Button", "x+10 yp w105 h28", "📂 Open Dir"))
 BtnOpenFolder.OnEvent("Click", (*) => Run("Songs"))
@@ -98,7 +102,7 @@ InfoText := AddHide(MyGui.Add("Text", "x260 y+2 w260 r1 cBlue Right", "Waiting f
 
 ; --- SECTION 2: SETTINGS ---
 MyGui.SetFont("s10 bold")
-AddHide(MyGui.Add("GroupBox", "x10 y230 w520 h140", " [2] SETTINGS "))
+AddHide(MyGui.Add("GroupBox", "x10 y255 w520 h140", " [2] SETTINGS "))
 MyGui.SetFont("s10 norm")
 
 CbSustain := AddHide(MyGui.Add("Checkbox", "x30 yp+30 Checked", "Sustain"))
@@ -123,7 +127,7 @@ AddHide(MyGui.Add("Text", "x+5 yp w20", "%"))
 
 ; --- SECTION 3: CONTROLS ---
 MyGui.SetFont("s10 bold")
-AddHide(MyGui.Add("GroupBox", "x10 y380 w520 h170", " [3] CONTROLS "))
+AddHide(MyGui.Add("GroupBox", "x10 y405 w520 h170", " [3] CONTROLS "))
 MyGui.SetFont("s10 norm")
 
 AddHide(MyGui.Add("Text", "xp+20 yp+25", "Target:"))
@@ -180,25 +184,31 @@ SB.SetParts(350, 170)
 RefreshWindowList()
 RefreshPlaylist()
 LoadSettings()
-
-MyGui.Show("w540 h590")
+MyGui.Show("w540 h615")
 
 ; ==============================================================================
 ; PLAYLIST MANAGEMENT
 ; ==============================================================================
 
-RefreshPlaylist() {
+RefreshPlaylist(filter := "") {
     SongList.Delete()
     count := 0
     Loop Files, "Songs\*.json" {
-        SongList.Add([A_LoopFileName])
-        count++
+        if (filter = "" || InStr(A_LoopFileName, filter)) {
+            SongList.Add([A_LoopFileName])
+            count++
+        }
     }
     Loop Files, "Songs\*.txt" {
-        SongList.Add([A_LoopFileName])
-        count++
+        if (filter = "" || InStr(A_LoopFileName, filter)) {
+            SongList.Add([A_LoopFileName])
+            count++
+        }
     }
-    UpdateStatus("📂 Library refreshed: " . count . " songs.", 1)
+    if (filter != "")
+        UpdateStatus("🔍 Filtered: " . count . " songs.", 1)
+    else
+        UpdateStatus("📂 Library refreshed: " . count . " songs.", 1)
 }
 
 LoadSongFromPlaylist() {
