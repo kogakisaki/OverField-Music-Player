@@ -68,10 +68,13 @@ SongList := AddHide(MyGui.Add("ListBox", "y+5 w190 h100 vSelectedSong"))
 SongList.OnEvent("DoubleClick", (*) => LoadSongFromPlaylist())
 
 ; Playlist Navigation Buttons
-BtnMoveUp := AddHide(MyGui.Add("Button", "x+2 yp w28 h49", "▲"))
+BtnMoveUp := AddHide(MyGui.Add("Button", "x+2 yp+0 w30 h32", "▲"))
 BtnMoveUp.OnEvent("Click", (*) => MoveSongUp())
-BtnMoveDown := AddHide(MyGui.Add("Button", "xp y+2 w28 h49", "▼"))
+BtnMoveDown := AddHide(MyGui.Add("Button", "xp y+2 w30 h32", "▼"))
 BtnMoveDown.OnEvent("Click", (*) => MoveSongDown())
+BtnShuffleList := AddHide(MyGui.Add("Button", "xp y+2 w30 h32", "🔀"))
+BtnShuffleList.SetFont("s10")
+BtnShuffleList.OnEvent("Click", (*) => ShufflePlaylist())
 
 BtnRefreshLib := AddHide(MyGui.Add("Button", "x25 y+5 w105 h28", "⟳ Refresh"))
 BtnRefreshLib.OnEvent("Click", (*) => RefreshPlaylist(SearchCtrl.Value))
@@ -252,6 +255,25 @@ MoveSongDown() {
     SongList.Delete(idx)
     SendMessage(0x0181, idx, StrPtr(txt), SongList.Hwnd)
     SongList.Choose(idx + 1)
+}
+
+ShufflePlaylist() {
+    items := ControlGetItems(SongList.Hwnd)
+    if (items.Length <= 1)
+        return
+        
+    ; Fisher-Yates shuffle algorithm
+    Loop items.Length {
+        i := items.Length - A_Index + 1
+        j := Random(1, i)
+        temp := items[i]
+        items[i] := items[j]
+        items[j] := temp
+    }
+    
+    SongList.Delete()
+    SongList.Add(items)
+    UpdateStatus("🔀 Playlist shuffled.", 1)
 }
 
 SaveSongToLibrary() {
